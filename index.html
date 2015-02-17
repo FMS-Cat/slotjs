@@ -13,6 +13,12 @@
         color : #ddd;
       }
 
+      body
+      {
+        background : #000;
+        overflow : hidden;
+      }
+
       a
       {
         text-decoration : none;
@@ -48,6 +54,7 @@
     <script src="slot.js"></script>
     <script>
       var slot = new Slot();
+      slot.setSize( window.innerWidth, Math.min( window.innerHeight, window.innerWidth ) );
       var reelSize = 3;
 
       (function(){
@@ -86,7 +93,15 @@
       var reach = false;
       var win = false;
 
-      document.onmousedown = function( _e ){
+      document.onmousedown = operate;
+      document.onmousedown = operate;
+      document.onkeydown = function( _e ){
+        if( _e.keyCode == 32 ){
+          operate();
+        }
+      }
+      
+      function operate(){
         if( win ){
           var a = document.createElement( 'a' );
           var tweet = 'FMSスロットで '+win+' が当たりました fms-cat.github.io/slotjs';
