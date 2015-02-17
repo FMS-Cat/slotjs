@@ -92,6 +92,11 @@
       var win = false;
       var touched = false;
 
+      var spinCount = 0;
+      var time = 0;
+      var lastTime = 0;
+      var lastOperate = 0;
+
       document.addEventListener( 'touchstart', function(){
         touched = true;
         operate();
@@ -108,14 +113,20 @@
       } );
 
       function operate(){
+        lastOperate = +new Date();
+
         if( win ){
           var a = document.createElement( 'a' );
-          var tweet = 'FMSスロットで '+win+' が当たりました fms-cat.github.io/slotjs';
+          var tweet = 'FMSスロットで '+win+' が当たりました。'+spinCount+' 回プレイし、'+time/1000+'秒 ドブに捨てました fms-cat.github.io/slotjs';
 
           a.href = 'https://twitter.com/intent/tweet?text='+tweet;
           a.target = '_blank';
 
           a.click();
+
+          spinCount = 0;
+          lastOperate = 0;
+          time = 0;
         }
 
         reach = false;
@@ -130,6 +141,7 @@
             for( var i=0; i<reelSize; i++ ){
               reel[i].start();
             }
+            spinCount ++;
             break;
           default:
             reel[phase-1].stop();
@@ -148,6 +160,15 @@
 
       function loop(){
         slot.loop();
+
+        var now = +new Date();
+        if( lastTime == 0 ){
+          lastTime = now;
+        }
+        if( now-lastOperate < 5000 ){
+          time += now-lastTime;
+        }
+        lastTime = now;
 
         var t = +new Date()*.01;
 
