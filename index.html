@@ -93,7 +93,7 @@
       var reach = false;
       var win = false;
 
-      document.touchstart = operate;
+      document.addEventListener( 'touchstart', operate );
       document.onmousedown = operate;
       document.onkeydown = function( _e ){
         if( _e.keyCode == 32 ){
