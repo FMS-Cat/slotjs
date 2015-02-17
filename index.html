@@ -92,14 +92,22 @@
       var phase = 0;
       var reach = false;
       var win = false;
+      var touched = false;
 
-      document.addEventListener( 'touchstart', operate );
-      document.onmousedown = operate;
-      document.onkeydown = function( _e ){
+      document.addEventListener( 'touchstart', function(){
+        touched = true;
+        operate();
+      } );
+      document.addEventListener( 'mousedown', function(){
+        if( !touched ){
+          operate();
+        }
+      } );
+      document.addEventListener( 'keydown', function( _e ){
         if( _e.keyCode == 32 ){
           operate();
         }
-      }
+      } );
 
       function operate(){
         if( win ){
