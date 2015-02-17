@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=0.5,minimum-scale=0.5,maximum-scale=2.0,user-scalable=yes">
+    <title></title>
+    <style>
+      *
+      {
+        margin : 0;
+        padding : 0;
+        color : #ddd;
+      }
+
+      a
+      {
+        text-decoration : none;
+        color : #8aa;
+      }
+
+      a:hover
+      {
+        color : #0aa;
+      }
+
+      ::selection
+      {
+        background : none;
+      }
+
+      #foot
+      {
+        position : absolute;
+        bottom : 0;
+        text-align : center;
+        background : #222;
+        padding : 4px;
+        width : 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="../../three.js"></script>
+    <script src="../../slot.js"></script>
+    <script>
+      var slot = new Slot();
+      
+      slot.addSymbol( 'image/a.png' );
+      slot.addSymbol( 'image/b.png' );
+      slot.addSymbol( 'image/c.png' );
+      slot.addSymbol( 'image/rare.png', { probability : 0.1 } );
+      slot.addSymbol( 'image/legendary.png', { probability : 0.01 } );
+
+      var reel = [];
+      for( var i=0; i<3; i++ ){
+        reel[i] = new Slot.Reel( slot );
+        reel[i].translate( (i-1)*1.1, 0, 0 );
+      }
+
+      function loop(){
+        slot.loop();
+        requestAnimationFrame( loop );
+      }
+      requestAnimationFrame( loop );
+
+      var phase = 0;
+
+      document.onmousedown = function( _e ){
+        var r = slot.getReelAtMouse(_e);
+        if( r ){
+          if( r.isMove ){
+            r.stop();
+          }else{
+            r.start();
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
