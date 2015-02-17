@@ -10,11 +10,11 @@ It enables create your own slot game easily on JavaScript.
 
 var slot = new Slot();
 
-slot.addSymbol( 'a.png', 1 );
-slot.addSymbol( 'b.png', 1 );
-slot.addSymbol( 'c.png', 1 );
-slot.addSymbol( 'rare.png', 0.1 );
-slot.addSymbol( 'legendary.png', 0.01 );
+slot.addSymbol( 'image/a.png' );
+slot.addSymbol( 'image/b.png' );
+slot.addSymbol( 'image/c.png' );
+slot.addSymbol( 'image/rare.png', { probability : 0.1 } );
+slot.addSymbol( 'image/legendary.png', { probability : 0.01 } );
 
 var reel = [];
 for( var i=0; i<3; i++ ){
