@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=0.5,minimum-scale=0.5,maximum-scale=2.0,user-scalable=yes">
+    <title></title>
+    <style>
+      *
+      {
+        margin : 0;
+        padding : 0;
+        color : #ddd;
+      }
+
+      a
+      {
+        text-decoration : none;
+        color : #8aa;
+      }
+
+      a:hover
+      {
+        color : #0aa;
+      }
+
+      ::selection
+      {
+        background : none;
+      }
+
+      #foot
+      {
+        position : absolute;
+        bottom : 0;
+        text-align : center;
+        background : #222;
+        padding : 4px;
+        width : 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="foot">
+      <a href="https://github.com/FMS-Cat/slotjs">slot.js</a>
+    </div>
+    <script src="three.js"></script>
+    <script src="slot.js"></script>
+    <script>
+      var slot = new Slot();
+      var reelSize = 3;
+
+      (function(){
+        var regexp = /#(\d+)/.exec( location.href );
+        if( regexp ){
+          reelSize = Number(regexp[1]);
+        }
+      }());
+
+      slot.setCameraPosition( 0, 0, 3+reelSize*.5 );
+      slot.addSymbol( 'image/cat.png', { name : '@FMS_Cat' } );
+      slot.addSymbol( 'image/cat2015.png', { name : '@FMS_Cat (2015)' } );
+      slot.addSymbol( 'image/cat_fms.png', { name : '@cat_fms' } );
+      slot.addSymbol( 'image/fmscat.png', { name : '@fmscat' } );
+      slot.addSymbol( 'image/dog.jpeg', { name : '@FMS_Dog' } );
+      slot.addSymbol( 'image/bear.png', { name : '@FMS_Bear' } );
+      slot.addSymbol( 'image/exit.png', { name : '@FMS_Exit' } );
+      slot.addSymbol( 'image/frog.jpeg', { name : '@FMS_Frog' } );
+      slot.addSymbol( 'image/goat.png', { name : '@FMS_Goat' } );
+      slot.addSymbol( 'image/gorilla.jpeg', { name : '@FMS_Gorilla' } );
+      slot.addSymbol( 'image/influ.png', { name : '@FMS_Influ' } );
+      slot.addSymbol( 'image/kappa.png', { name : '@FMS_Kappa' } );
+      slot.addSymbol( 'image/monkey.jpeg', { name : '@FMS_Monkey' } );
+      slot.addSymbol( 'image/python.png', { name : '@FMS_Python' } );
+      slot.addSymbol( 'image/rabbit.png', { name : '@FMS_Rabbit' } );
+      slot.addSymbol( 'image/shirataki.png', { name : '@FMS_Shirataki' } );
+      slot.addSymbol( 'image/xmas.png', { name : '@FMS_Xmas' } );
+
+      var reel = [];
+      for( var i=0; i<reelSize; i++ ){
+        reel[i] = new Slot.Reel( slot );
+        reel[i].translate( (i-(reelSize-1)/2)*1.1, 0, 0 );
+      }
+
+      var phase = 0;
+      var reach = false;
+      var win = false;
+
+      document.onmousedown = function( _e ){
+        if( win ){
+          var a = document.createElement( 'a' );
+          var tweet = 'FMSスロットで '+win+' が当たりました fms-cat.github.io/slotjs';
+
+          a.href = 'https://twitter.com/intent/tweet?text='+tweet;
+          a.target = '_blank';
+
+          a.click();
+        }
+
+        reach = false;
+        win = false;
+
+        for( var i=0; i<reelSize; i++ ){
+          reel[i].setLightColor( .5, .5, .5 );
+        }
+
+        switch(phase){
+          case 0:
+            for( var i=0; i<reelSize; i++ ){
+              reel[i].start();
+            }
+            break;
+          default:
+            reel[phase-1].stop();
+            break;
+        }
+        phase = (++phase)%(reelSize+1);
+      }
+
+      slot.onReach = function(){
+        reach = true;
+      }
+
+      slot.onWin = function( _e ){
+        win = _e;
+      }
+
+      function loop(){
+        slot.loop();
+
+        var t = +new Date()*.01;
+
+        if( reach ){
+          for( var i=0; i<reelSize; i++ ){
+            reel[i].setLightColor( .5+.2*Math.sin(t*3), .3, .5-.2*Math.sin(t*3) );
+          }
+        }else if( win ){
+          for( var i=0; i<reelSize; i++ ){
+            reel[i].setLightColor( .4+.2*Math.sin(t+i), .4+.2*Math.sin(t+2+i), .4+.2*Math.sin(t+4+i) );
+          }
+        }else{
+
+        }
+
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    </script>
+  </body>
+</html>
